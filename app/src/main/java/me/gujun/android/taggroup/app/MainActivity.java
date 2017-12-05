@@ -2,7 +2,7 @@ package me.gujun.android.taggroup.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,7 +13,7 @@ import me.gujun.android.taggroup.AndroidTagGroup;
 import me.gujun.android.taggroup.app.db.TagsManager;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     private TextView mPromptText;
 
     private AndroidTagGroup mDefaultAndroidTagGroup;
@@ -38,7 +38,7 @@ public class MainActivity extends ActionBarActivity {
         mTagsManager = TagsManager.getInstance(getApplicationContext());
         String[] tags = mTagsManager.getTags();
 
-        mPromptText = (TextView) findViewById(R.id.tv_prompt);
+        mPromptText = findViewById(R.id.tv_prompt);
         mPromptText.setVisibility((tags == null || tags.length == 0) ? View.VISIBLE : View.GONE);
         mPromptText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,11 +47,11 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        mDefaultAndroidTagGroup = (AndroidTagGroup) findViewById(R.id.androidTagGroup);
-        mSmallAndroidTagGroup = (AndroidTagGroup) findViewById(R.id.tag_group_small);
-        mLargeAndroidTagGroup = (AndroidTagGroup) findViewById(R.id.tag_group_large);
-        mBeautyAndroidTagGroup = (AndroidTagGroup) findViewById(R.id.tag_group_beauty);
-        mBeautyInverseAndroidTagGroup = (AndroidTagGroup) findViewById(R.id.tag_group_beauty_inverse);
+        mDefaultAndroidTagGroup = findViewById(R.id.androidTagGroup);
+        mSmallAndroidTagGroup = findViewById(R.id.tag_group_small);
+        mLargeAndroidTagGroup = findViewById(R.id.tag_group_large);
+        mBeautyAndroidTagGroup = findViewById(R.id.tag_group_beauty);
+        mBeautyInverseAndroidTagGroup = findViewById(R.id.tag_group_beauty_inverse);
         if (tags != null && tags.length > 0) {
             mDefaultAndroidTagGroup.setTags(tags);
             mSmallAndroidTagGroup.setTags(tags);
