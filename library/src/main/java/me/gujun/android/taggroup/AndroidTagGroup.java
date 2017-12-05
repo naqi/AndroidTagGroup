@@ -58,6 +58,7 @@ public class AndroidTagGroup extends ViewGroup {
     private final int DEFAULT_DASH_BORDER_COLOR = Color.rgb(0xAA, 0xAA, 0xAA);
     private final int DEFAULT_INPUT_HINT_COLOR = Color.argb(0x80, 0x00, 0x00, 0x00);
     private final int DEFAULT_INPUT_TEXT_COLOR = Color.argb(0xDE, 0x00, 0x00, 0x00);
+    private final int DEFAULT_INPUT_BACKGROUND_COLOR = Color.WHITE;
     private final int DEFAULT_CHECKED_BORDER_COLOR = Color.rgb(0x49, 0xC1, 0x20);
     private final int DEFAULT_CHECKED_TEXT_COLOR = Color.WHITE;
     private final int DEFAULT_CHECKED_MARKER_COLOR = Color.WHITE;
@@ -82,7 +83,7 @@ public class AndroidTagGroup extends ViewGroup {
     // The tag text color.
     private int mTextColor;
     @ColorInt
-    // The tag background color.
+    // The regular tag background color.
     private int mBackgroundColor;
     @ColorInt
     // The dash outline border color.
@@ -93,6 +94,10 @@ public class AndroidTagGroup extends ViewGroup {
     @ColorInt
     // The input tag type text color.
     private int mInputTextColor;
+    @ColorInt
+    // The input tag type background color.
+    private int mInputTagBackgroundColor;
+
     @ColorInt
     // The checked tag outline border color.
     private int mCheckedBorderColor;
@@ -158,6 +163,7 @@ public class AndroidTagGroup extends ViewGroup {
             mDashBorderColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_dashBorderColor, DEFAULT_DASH_BORDER_COLOR);
             mInputHintColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_inputHintColor, DEFAULT_INPUT_HINT_COLOR);
             mInputTextColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_inputTextColor, DEFAULT_INPUT_TEXT_COLOR);
+            mInputTagBackgroundColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_inputTagBackgroundColor, DEFAULT_INPUT_BACKGROUND_COLOR);
             mCheckedBorderColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_checkedBorderColor, DEFAULT_CHECKED_BORDER_COLOR);
             mCheckedTextColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_checkedTextColor, DEFAULT_CHECKED_TEXT_COLOR);
             mCheckedMarkerColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_checkedMarkerColor, DEFAULT_CHECKED_MARKER_COLOR);
@@ -219,6 +225,10 @@ public class AndroidTagGroup extends ViewGroup {
 
     public void setInputTextColor(@ColorInt int inputTextColor) {
         mInputTextColor = inputTextColor;
+    }
+
+    public void setInputBackgroundColor(int inputBackgroundColor) {
+        mInputTagBackgroundColor = inputBackgroundColor;
     }
 
     public void setCheckedBorderColor(@ColorInt int checkedBorderColor) {
@@ -550,13 +560,6 @@ public class AndroidTagGroup extends ViewGroup {
     }
 
     /**
-     * @see #setTags(String...)
-     */
-    public void setTags(List<String> tagList) {
-        setTags(tagList.toArray(new String[tagList.size()]));
-    }
-
-    /**
      * Set the tags. It will remove all previous tags first.
      *
      * @param tags the tag list to set.
@@ -573,6 +576,13 @@ public class AndroidTagGroup extends ViewGroup {
         if (mIsAppendMode) {
             appendInputTag();
         }
+    }
+
+    /**
+     * @see #setTags(String...)
+     */
+    public void setTags(List<String> tagList) {
+        setTags(tagList.toArray(new String[tagList.size()]));
     }
 
     /**
@@ -1005,7 +1015,7 @@ public class AndroidTagGroup extends ViewGroup {
                 if (mState == STATE_INPUT) {
                     mBorderPaint.setColor(mDashBorderColor);
                     mBorderPaint.setPathEffect(mPathEffect);
-                    mBackgroundPaint.setColor(mBackgroundColor);
+                    mBackgroundPaint.setColor(mInputTagBackgroundColor);
                     setHintTextColor(mInputHintColor);
                     setTextColor(mInputTextColor);
                 } else {
