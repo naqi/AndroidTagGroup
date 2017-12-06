@@ -14,6 +14,7 @@ import android.graphics.Typeface;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -139,12 +140,33 @@ public class AndroidTagGroup extends ViewGroup {
     // Listener used to dispatch tag change event.
     private OnTagChangeListener mOnTagChangeListener;
     private OnTagLimitationExceedListener mOnTagLimitationExceedListener;
-    // Listener used to dispatch tag click event.
+    /**
+     * Listener used to dispatch tag click event.
+     */
     private OnTagClickListener mOnTagClickListener;
+    /**
+     * Listener used to listen input tag focus changes.
+     */
+    @Nullable
+    private OnInputFocusChangedListener mOnInputTagFocusChangedListener;
+
     // Adding tags limitation.
     private int mTagsLimitation = -1;
     // Listener used to handle tag click event.
     private InternalTagClickListener mInternalTagClickListener = new InternalTagClickListener();
+    /**
+     * Listener user to handle input tag focus changes. Now used only to delegate these events to
+     * external listener if it is presented.
+     */
+    private OnInputFocusChangedListener mInternalInputFocusChangedListener
+            = new OnInputFocusChangedListener() {
+        @Override
+        public void onFocusChange(View tagView, boolean hasFocus) {
+            if (mOnInputTagFocusChangedListener != null) {
+                mOnInputTagFocusChangedListener.onFocusChange(tagView, hasFocus);
+            }
+        }
+    };
 
     public AndroidTagGroup(Context context) {
         this(context, null);
@@ -443,6 +465,15 @@ public class AndroidTagGroup extends ViewGroup {
         mOnTagClickListener = l;
     }
 
+    /**
+     * Register a callback to be invoked when input tag get or loose focus.
+     *
+     * @param l the callback that will run.
+     */
+    public void setOnInputTagFocusChangedListener(OnInputFocusChangedListener l) {
+        mOnInputTagFocusChangedListener = l;
+    }
+
     protected void deleteTag(TagView tagView) {
         removeView(tagView);
         if (mOnTagChangeListener != null) {
@@ -666,6 +697,7 @@ public class AndroidTagGroup extends ViewGroup {
             newInputTag.setEnabled(false);
         }
         newInputTag.setOnClickListener(mInternalTagClickListener);
+
         addView(newInputTag);
     }
 
@@ -722,6 +754,14 @@ public class AndroidTagGroup extends ViewGroup {
          * @param tag The tag text of the tag that was clicked.
          */
         void onTagClick(String tag);
+    }
+
+    /**
+     * Interface definition for a callback to be invoked when an input tag get or loose input focus.
+     */
+    public interface OnInputFocusChangedListener extends OnFocusChangeListener {
+        @Override
+        void onFocusChange(View tagView, boolean hasFocus);
     }
 
     /**
@@ -918,6 +958,8 @@ public class AndroidTagGroup extends ViewGroup {
             });
 
             if (state == STATE_INPUT) {
+                setOnFocusChangeListener(mInternalInputFocusChangedListener);
+
                 requestFocus();
                 //Replace Enter (new line) button with Action Go
                 setRawInputType(InputType.TYPE_CLASS_TEXT);
@@ -1011,6 +1053,8 @@ public class AndroidTagGroup extends ViewGroup {
          * Call this method to end this tag's INPUT state.
          */
         public void endInput() {
+            setOnFocusChangeListener(null);
+
             // Make the view not focusable.
             setFocusable(false);
             setFocusableInTouchMode(false);
@@ -1022,6 +1066,10 @@ public class AndroidTagGroup extends ViewGroup {
             mState = STATE_NORMAL;
             invalidatePaint();
             requestLayout();
+        }
+
+        int getState() {
+            return mState;
         }
 
         /**

@@ -2,14 +2,19 @@ package me.gujun.android.taggroup.app;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import me.gujun.android.taggroup.AndroidTagGroup;
 import me.gujun.android.taggroup.app.db.TagsManager;
 
 
 public class TagEditorActivity extends AppCompatActivity {
+
+    private static final String TAG = "TagEditorActivity";
+
     private AndroidTagGroup mAndroidTagGroup;
     private TagsManager mTagsManager;
 
@@ -22,6 +27,12 @@ public class TagEditorActivity extends AppCompatActivity {
         String[] tags = mTagsManager.getTags();
 
         mAndroidTagGroup = findViewById(R.id.androidTagGroup);
+        mAndroidTagGroup.setOnInputTagFocusChangedListener(new AndroidTagGroup.OnInputFocusChangedListener() {
+            @Override
+            public void onFocusChange(View tagView, boolean hasFocus) {
+                Log.d(TAG, "Input tag has focus: " + hasFocus);
+            }
+        });
         mAndroidTagGroup.setTags(tags);
     }
 
