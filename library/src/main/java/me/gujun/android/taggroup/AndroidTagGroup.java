@@ -103,6 +103,8 @@ public class AndroidTagGroup extends ViewGroup {
     @ColorInt
     // The input tag type text color.
     private int mInputTextColor;
+    // Text size for input field in append mode
+    private float mInputTextSize;
     @ColorInt
     // The input tag type background color.
     private int mInputTagBackgroundColor;
@@ -183,6 +185,7 @@ public class AndroidTagGroup extends ViewGroup {
             mDashBorderColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_dashBorderColor, DEFAULT_DASH_BORDER_COLOR);
             mInputHintColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_inputHintColor, DEFAULT_INPUT_HINT_COLOR);
             mInputTextColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_inputTextColor, DEFAULT_INPUT_TEXT_COLOR);
+            mInputTextSize = typedArray.getDimension(R.styleable.AndroidTagGroup_atg_inputTextSize, mDefaultTextSize);
             mInputTagBackgroundColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_inputTagBackgroundColor, DEFAULT_INPUT_BACKGROUND_COLOR);
             mCheckedBorderColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_checkedBorderColor, DEFAULT_CHECKED_BORDER_COLOR);
             mCheckedTextColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_checkedTextColor, DEFAULT_CHECKED_TEXT_COLOR);
@@ -249,6 +252,10 @@ public class AndroidTagGroup extends ViewGroup {
 
     public void setInputTextColor(@ColorInt int inputTextColor) {
         mInputTextColor = inputTextColor;
+    }
+
+    public void setInputTextSize(float inputTextSize) {
+        mInputTextSize = inputTextSize;
     }
 
     public void setInputBackgroundColor(int inputBackgroundColor) {
@@ -584,6 +591,13 @@ public class AndroidTagGroup extends ViewGroup {
     }
 
     /**
+     * @see #setTags(String...)
+     */
+    public void setTags(List<String> tagList) {
+        setTags(tagList.toArray(new String[tagList.size()]));
+    }
+
+    /**
      * Set the tags. It will remove all previous tags first.
      *
      * @param tags the tag list to set.
@@ -600,13 +614,6 @@ public class AndroidTagGroup extends ViewGroup {
         if (mIsAppendMode) {
             appendInputTag();
         }
-    }
-
-    /**
-     * @see #setTags(String...)
-     */
-    public void setTags(List<String> tagList) {
-        setTags(tagList.toArray(new String[tagList.size()]));
     }
 
     /**
@@ -893,7 +900,6 @@ public class AndroidTagGroup extends ViewGroup {
 
             setGravity(Gravity.CENTER);
             setText(text);
-            setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
 
             mState = state;
 
@@ -1044,8 +1050,10 @@ public class AndroidTagGroup extends ViewGroup {
                     mBackgroundPaint.setColor(mInputTagBackgroundColor);
                     setHintTextColor(mInputHintColor);
                     setTextColor(mInputTextColor);
+                    setTextSize(TypedValue.COMPLEX_UNIT_PX, mInputTextSize);
                 } else {
                     mBorderPaint.setPathEffect(null);
+                    setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
                     if (isChecked) {
                         mBorderPaint.setColor(mCheckedBorderColor);
                         mBackgroundPaint.setColor(mCheckedBackgroundColor);
@@ -1060,6 +1068,7 @@ public class AndroidTagGroup extends ViewGroup {
                 mBorderPaint.setColor(mBorderColor);
                 mBackgroundPaint.setColor(mBackgroundColor);
                 setTextColor(mTextColor);
+                setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
             }
 
             if (isPressed) {
