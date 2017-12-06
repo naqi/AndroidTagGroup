@@ -10,6 +10,7 @@ import android.graphics.Path;
 import android.graphics.PathEffect;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
@@ -76,12 +77,20 @@ public class AndroidTagGroup extends ViewGroup {
     private boolean mIsAppendMode;
     // The text to be displayed when the text of the INPUT tag is empty.
     private CharSequence mInputHint;
+    /**
+     * The tag outline border color.
+     */
     @ColorInt
-    // The tag outline border color.
     private int mBorderColor;
+    /**
+     * The tag text color.
+     */
     @ColorInt
-    // The tag text color.
     private int mTextColor;
+    /**
+     * Font used in tags.
+     */
+    private Typeface mTextTypeface;
     @ColorInt
     // The regular tag background color.
     private int mBackgroundColor;
@@ -159,6 +168,17 @@ public class AndroidTagGroup extends ViewGroup {
             mInputHint = typedArray.getText(R.styleable.AndroidTagGroup_atg_inputHint);
             mBorderColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_borderColor, DEFAULT_BORDER_COLOR);
             mTextColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_textColor, DEFAULT_TEXT_COLOR);
+
+            if (typedArray.hasValue(R.styleable.AndroidTagGroup_atg_textTypefaceAssetPath)) {
+                String typefacePath = typedArray.getString(R.styleable.AndroidTagGroup_atg_textTypefaceAssetPath);
+                if (!TextUtils.isEmpty(typefacePath)) {
+                    mTextTypeface = Typeface.createFromAsset(context.getAssets(), typefacePath);
+                }
+                if (mTextTypeface == null) {
+                    mTextTypeface = Typeface.DEFAULT;
+                }
+            }
+
             mBackgroundColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_backgroundColor, DEFAULT_BACKGROUND_COLOR);
             mDashBorderColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_dashBorderColor, DEFAULT_DASH_BORDER_COLOR);
             mInputHintColor = typedArray.getColor(R.styleable.AndroidTagGroup_atg_inputHintColor, DEFAULT_INPUT_HINT_COLOR);
@@ -209,6 +229,10 @@ public class AndroidTagGroup extends ViewGroup {
 
     public void setTextColor(@ColorInt int textColor) {
         mTextColor = textColor;
+    }
+
+    public void setTextTypeface(Typeface textTypeface) {
+        mTextTypeface = textTypeface;
     }
 
     public void setViewBackgroundColor(@ColorInt int backgroundColor) {
@@ -1011,6 +1035,8 @@ public class AndroidTagGroup extends ViewGroup {
         }
 
         private void invalidatePaint() {
+            setTypeface(mTextTypeface);
+
             if (mIsAppendMode) {
                 if (mState == STATE_INPUT) {
                     mBorderPaint.setColor(mDashBorderColor);

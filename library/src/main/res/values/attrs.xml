@@ -9,6 +9,9 @@
         <attr name="atg_borderColor" format="color"/>
         <!-- The tag view text color. -->
         <attr name="atg_textColor" format="color"/>
+        <!-- The tag view font assets path. -->
+        <attr name="atg_textTypefaceAssetPath" format="string"/>
+
         <!-- The tag view background color. -->
         <attr name="atg_backgroundColor" format="color"/>
 
