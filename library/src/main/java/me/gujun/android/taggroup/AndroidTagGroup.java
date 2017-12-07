@@ -629,7 +629,7 @@ public class AndroidTagGroup extends ViewGroup {
     }
 
     public void setTags(List<String> tagList, boolean requestFocusIfInAppendMode) {
-        setTags(tagList.toArray(new String[tagList.size()]));
+        setTags(tagList.toArray(new String[tagList.size()]), requestFocusIfInAppendMode);
     }
 
     /**
