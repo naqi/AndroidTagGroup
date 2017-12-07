@@ -491,7 +491,8 @@ public class AndroidTagGroup extends ViewGroup {
      *
      * @return the INPUT state tag view or null if not exists
      */
-    protected TagView getInputTag() {
+    @Nullable
+    public TagView getInputTag() {
         if (mIsAppendMode) {
             final int inputTagIndex = getChildCount() - 1;
             final TagView inputTag = getTagAt(inputTagIndex);
@@ -622,6 +623,16 @@ public class AndroidTagGroup extends ViewGroup {
     }
 
     /**
+     * Set the tags. It will remove all previous tags first. If in append mode, input tag will
+     * request focus.
+     *
+     * @param tags the tag list to set.
+     */
+    public void setTags(String... tags) {
+        setTags(tags, true);
+    }
+
+    /**
      * @see #setTags(String...)
      */
     public void setTags(List<String> tagList) {
@@ -633,19 +644,9 @@ public class AndroidTagGroup extends ViewGroup {
     }
 
     /**
-     * Set the tags. It will remove all previous tags first. If in append mode, input tag will
-     * request focus.
-     *
-     * @param tags the tag list to set.
-     */
-    public void setTags(String... tags) {
-        setTags(tags, true);
-    }
-
-    /**
      * Set the tags. It will remove all previous tags first.
      *
-     * @param tags the tag list to set.
+     * @param tags                       the tag list to set.
      * @param requestFocusIfInAppendMode if true tag for input will request focus.
      */
     public void setTags(String[] tags, boolean requestFocusIfInAppendMode) {
