@@ -33,7 +33,7 @@ public class TagEditorActivity extends AppCompatActivity {
                 Log.d(TAG, "Input tag has focus: " + hasFocus);
             }
         });
-        mAndroidTagGroup.setTags(tags);
+        mAndroidTagGroup.setTags(tags, false);
     }
 
     @Override

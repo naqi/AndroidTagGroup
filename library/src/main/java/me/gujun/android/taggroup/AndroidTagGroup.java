@@ -625,15 +625,30 @@ public class AndroidTagGroup extends ViewGroup {
      * @see #setTags(String...)
      */
     public void setTags(List<String> tagList) {
+        setTags(tagList, true);
+    }
+
+    public void setTags(List<String> tagList, boolean requestFocusIfInAppendMode) {
         setTags(tagList.toArray(new String[tagList.size()]));
+    }
+
+    /**
+     * Set the tags. It will remove all previous tags first. If in append mode, input tag will
+     * request focus.
+     *
+     * @param tags the tag list to set.
+     */
+    public void setTags(String... tags) {
+        setTags(tags, true);
     }
 
     /**
      * Set the tags. It will remove all previous tags first.
      *
      * @param tags the tag list to set.
+     * @param requestFocusIfInAppendMode if true tag for input will request focus.
      */
-    public void setTags(String... tags) {
+    public void setTags(String[] tags, boolean requestFocusIfInAppendMode) {
         if (mTagsLimitation != -1 && tags.length > mTagsLimitation) {
             throw new IllegalStateException(String.format("There is a limitation (%1$d) in adding tags.", mTagsLimitation));
         }
@@ -643,7 +658,7 @@ public class AndroidTagGroup extends ViewGroup {
         }
 
         if (mIsAppendMode) {
-            appendInputTag();
+            appendInputTag(requestFocusIfInAppendMode);
         }
     }
 
@@ -651,7 +666,15 @@ public class AndroidTagGroup extends ViewGroup {
      * @see #appendInputTag(String)
      */
     protected void appendInputTag() {
-        appendInputTag(null);
+        appendInputTag(null, true);
+    }
+
+    protected void appendInputTag(boolean requestFocus) {
+        appendInputTag(null, requestFocus);
+    }
+
+    protected void appendInputTag(String tag) {
+        appendInputTag(tag, true);
     }
 
     /**
@@ -659,13 +682,13 @@ public class AndroidTagGroup extends ViewGroup {
      *
      * @param tag the tag text.
      */
-    protected void appendInputTag(String tag) {
+    protected void appendInputTag(String tag, boolean requestFocus) {
         final TagView previousInputTag = getInputTag();
         if (previousInputTag != null) {
             throw new IllegalStateException("Already has an INPUT tag in group.");
         }
 
-        final TagView newInputTag = new TagView(getContext(), TagView.STATE_INPUT, tag);
+        final TagView newInputTag = new TagView(getContext(), TagView.STATE_INPUT, tag, requestFocus);
 
         if (mCharsLimitation != -1) {
             newInputTag.addTextChangedListener(new TextWatcher() {
@@ -930,8 +953,12 @@ public class AndroidTagGroup extends ViewGroup {
             mCheckedMarkerPaint.setColor(mCheckedMarkerColor);
         }
 
-
         public TagView(Context context, final int state, CharSequence text) {
+            this(context, state, text, true);
+        }
+
+
+        public TagView(Context context, final int state, CharSequence text, boolean requestFocusIfAppendMode) {
             super(context);
             setPadding(mHorizontalPadding, mVerticalPadding, mHorizontalPadding, mVerticalPadding);
             setLayoutParams(new LayoutParams(
@@ -960,7 +987,9 @@ public class AndroidTagGroup extends ViewGroup {
             if (state == STATE_INPUT) {
                 setOnFocusChangeListener(mInternalInputFocusChangedListener);
 
-                requestFocus();
+                if (requestFocusIfAppendMode) {
+                    requestFocus();
+                }
                 //Replace Enter (new line) button with Action Go
                 setRawInputType(InputType.TYPE_CLASS_TEXT);
                 setImeOptions(EditorInfo.IME_ACTION_GO);
