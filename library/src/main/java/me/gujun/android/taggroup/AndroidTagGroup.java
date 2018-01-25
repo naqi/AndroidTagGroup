@@ -167,6 +167,8 @@ public class AndroidTagGroup extends ViewGroup {
             }
         }
     };
+    private int currentRowCount;
+    private int lastRowWidth;
 
     public AndroidTagGroup(Context context) {
         this(context, null);
@@ -443,6 +445,14 @@ public class AndroidTagGroup extends ViewGroup {
         return -1;
     }
 
+    public int getCurrentRowCount() {
+        return currentRowCount;
+    }
+
+    public int getLastRowWidth() {
+        return lastRowWidth;
+    }
+
     /**
      * Register a callback to be invoked when this tag group is changed.
      *
@@ -531,7 +541,8 @@ public class AndroidTagGroup extends ViewGroup {
         int width;
         int height = 0;
 
-        int row = 0; // The row counter.
+        // The row counter.
+        int rowIndex = 0;
         int rowWidth = 0; // Calc the current row width.
         int rowMaxHeight = 0; // Calc the max tag height, in current row.
 
@@ -547,7 +558,7 @@ public class AndroidTagGroup extends ViewGroup {
                     rowWidth = childWidth; // The next row width.
                     height += rowMaxHeight + mVerticalSpacing;
                     rowMaxHeight = childHeight; // The next row max height.
-                    row++;
+                    rowIndex++;
                 } else { // This line.
                     rowMaxHeight = Math.max(rowMaxHeight, childHeight);
                 }
@@ -561,7 +572,7 @@ public class AndroidTagGroup extends ViewGroup {
         height += getPaddingTop() + getPaddingBottom();
 
         // If the tags grouped in one row, set the width to wrap the tags.
-        if (row == 0) {
+        if (rowIndex == 0) {
             width = rowWidth;
             width += getPaddingLeft() + getPaddingRight();
         } else {// If the tags grouped exceed one line, set the width to match the parent.
@@ -570,6 +581,9 @@ public class AndroidTagGroup extends ViewGroup {
 
         setMeasuredDimension(widthMode == MeasureSpec.EXACTLY ? widthSize : width,
                 heightMode == MeasureSpec.EXACTLY ? heightSize : height);
+
+        currentRowCount = rowIndex + 1;
+        lastRowWidth = rowWidth;
     }
 
     @Override
@@ -730,7 +744,7 @@ public class AndroidTagGroup extends ViewGroup {
      *
      * @param tag the tag to append.
      */
-    protected void appendTag(CharSequence tag) {
+    public void appendTag(CharSequence tag) {
         final TagView newTag = new TagView(getContext(), TagView.STATE_NORMAL, tag);
         newTag.setOnClickListener(mInternalTagClickListener);
         addView(newTag);
