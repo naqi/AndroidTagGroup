@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputConnectionWrapper;
+import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -884,7 +885,7 @@ public class AndroidTagGroup extends ViewGroup {
     /**
      * The tag view which has two states can be either NORMAL or INPUT.
      */
-    public class TagView extends TextView {
+    public class TagView extends AutoCompleteTextView {
         public static final int STATE_NORMAL = 1;
         public static final int STATE_INPUT = 2;
 
