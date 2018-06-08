@@ -1077,6 +1077,7 @@ public class AndroidTagGroup extends ViewGroup {
 
                     @Override
                     public void afterTextChanged(Editable s) {
+                        requestLayout();
                     }
                 });
             }
