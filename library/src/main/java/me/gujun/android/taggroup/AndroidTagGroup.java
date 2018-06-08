@@ -360,10 +360,11 @@ public class AndroidTagGroup extends ViewGroup {
         if (inputTag != null && inputTag.isInputAvailable()) {
             inputTag.endInput();
 
+            appendInputTag();
+
             if (mOnTagChangeListener != null) {
                 mOnTagChangeListener.onAppend(AndroidTagGroup.this, inputTag.getText().toString());
             }
-            appendInputTag();
         }
     }
 
