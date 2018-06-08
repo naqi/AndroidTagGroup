@@ -30,7 +30,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputConnectionWrapper;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -329,6 +331,12 @@ public class AndroidTagGroup extends ViewGroup {
 
     public void setVerticalPadding(int verticalPadding) {
         mVerticalPadding = verticalPadding;
+    }
+
+    public void setAutoCompleteAdapter(ArrayAdapter<String> adapter){
+        if (getInputTag() != null) {
+            getInputTag().setAdapter(adapter);
+        }
     }
 
     /**
