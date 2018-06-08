@@ -756,7 +756,6 @@ public class AndroidTagGroup extends ViewGroup {
     public void appendTag(CharSequence tag) {
         final TagView newTag = new TagView(getContext(), TagView.STATE_NORMAL, tag);
         newTag.setOnClickListener(mInternalTagClickListener);
-        newTag.setChecked(mIsAppendMode);
         addView(newTag);
     }
 
