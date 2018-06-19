@@ -901,7 +901,7 @@ public class AndroidTagGroup extends ViewGroup {
         /**
          * The offset to the text.
          */
-        private static final int CHECKED_MARKER_OFFSET = 3;
+        private static final int CHECKED_MARKER_OFFSET = 8;
 
         /**
          * The stroke width of the checked marker
